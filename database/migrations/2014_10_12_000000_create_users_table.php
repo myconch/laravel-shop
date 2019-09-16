@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             //用户编号（主键索引值）
             $table->bigIncrements('id');
             //昵称
-            $table->string('nickname');
+            $table->string('name');
             //Email
             $table->string('email')->unique();  //unique()设置额外主键
             //用户类型（type）：用于识别用户的身份
