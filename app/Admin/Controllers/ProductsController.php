@@ -211,8 +211,8 @@ class ProductsController extends Controller
               <!-- 弹窗内容 -->
               <div class="modal-attri-content">
                 <span class="close">&times;</span>
-                <div id="popupForm"></div>
-                <button type="button" id="skuAttribute">确定</button>
+                <div id="popupForm" style="display:flex;"></div>
+                <button type="button" id="skuAttribute" class="btn btn-success" style="margin-left:80%;margin-top:30px;width: 100px;">确定</button>
               </div>
               
             </div>
@@ -258,6 +258,55 @@ class ProductsController extends Controller
                 color: black;
                 text-decoration: none;
                 cursor: pointer;
+            }
+            
+            .select {
+                display: inline-block;
+                min-width: 150px;
+                height: 35px;
+                margin-left: 10px;
+                position: relative;
+                vertical-align: middle;
+                padding: 0;
+                overflow: hidden;
+                background-color: #fff;
+                color: #555;
+                border: 1px solid #aaa;
+                text-shadow: none;
+                border-radius: 4px;	
+                transition: box-shadow 0.25s ease;
+                z-index: 2;
+            }
+ 
+            .select:hover {
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+            }
+         
+            .select:before {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 0;
+                border: 10px solid transparent;
+                border-top-color: #ccc;
+                top: 14px;
+                right: 10px;
+                cursor: pointer;
+                z-index: -2;
+            }
+            .select select {
+                cursor: pointer;
+                padding: 10px;
+                width: 100%;
+                border: none;
+                background: transparent;
+                background-image: none;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+            }
+         
+            .select select:focus {
+                outline: none;
             }
         ');
 
@@ -307,13 +356,13 @@ class ProductsController extends Controller
                 var values = document.getElementsByClassName("form-control attributes values");
                 var html = "";
                 for (var i=0; i< name.length; i++) {
-                    html += "<span>" + name[i].value + "</span>"
+                    html += "<div style=\"flex:1;height:35px;margin-top:40px;\"><span>" + name[i].value + "</span>"
                     var valuesArray = values[i].value.split(",");
-                    var select = \'<select name="attribute">\';
+                    var select = \'<select name="attribute" class="select">\';
                     for (var j=0; j< valuesArray.length; j++) {
                         select += \'<option value=\' + valuesArray[j] + \'>\' + valuesArray[j] + \'</option>\'
                     }
-                    select += "</select>";
+                    select += "</select></div>";
                     html += select;
                 }
                 return html;
@@ -379,12 +428,15 @@ class ProductsController extends Controller
                 $form->tagsinput('values','值')->rules('required');
             });
             $form->html("
-                <button id='vv' type='button' >插入</button>
+                <button id=\"vv\" class=\"btn btn warning\" type=\"button\" style=\"width: 100px;float: right;background-color: gold;\">保存编辑</button>
+                <span class=\"help-block\" style=\"color:red;\">
+                    <i class=\"fa fa-info-circle\"></i>&nbsp;进入下一步前单击右方的“保存编辑”按钮，同步数据到sku属性选择菜单
+                </span>
                 ");
         })->tab('第三步 单品信息',function ($form){
             // 创建商品sku
             $form->hasMany('skus','SKU 列表',function (Form\NestedForm $form){
-                $form->text('title','SKU 名称')->rules('required');
+                $form->text('title','SKU 属性')->rules('required');
                 $form->text('description','SKU 描述')->rules('required');
                 $form->text('price','单价')->rules('required|numeric|min:0.01');
                 $form->text('stock','剩余库存')->rules('required|integer|min:0');
