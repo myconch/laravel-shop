@@ -43,17 +43,21 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+
     /*
     public function getImageAttribute($image)
     {
         return json_decode($image,true);
+        //return explode(',',$image);
     }
 
     public function setImageAttribute($image)
     {
         if (is_array($image)) {
-            return $this->attributes['image'] = json_encode($image);
+            $this->attributes['image'] = json_encode($image);
         }
+
+        //return $this->attributes['image'] = implode(',',$image);
     }
     */
 }

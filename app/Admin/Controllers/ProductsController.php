@@ -58,7 +58,7 @@ class ProductsController extends Controller
     {
         return $content
             ->header('编辑商品')
-            ->body($this->form1($id)->edit($id));
+            ->body($this->form($id)->edit($id));
     }
 
     /**
@@ -71,7 +71,7 @@ class ProductsController extends Controller
     {
         return $content
             ->header('创建商品')
-            ->body($this->form1());
+            ->body($this->form());
     }
 
     /**
@@ -145,7 +145,7 @@ class ProductsController extends Controller
      *
      * @return Form
      */
-    protected function form()
+    protected function form1()
     {
         $form = new Form(new Product);
 
@@ -204,7 +204,7 @@ class ProductsController extends Controller
         return $form;
     }
 
-    protected function form1()
+    protected function form()
     {
         Admin::html('
             <div id="myModal" class="modal-attri">
@@ -362,7 +362,7 @@ class ProductsController extends Controller
                     for (var j=0; j< valuesArray.length; j++) {
                         select += \'<option value=\' + valuesArray[j] + \'>\' + valuesArray[j] + \'</option>\'
                     }
-                    select += "</select></div>";
+                    select = select + \'</select></div>\';
                     html += select;
                 }
                 return html;
@@ -412,7 +412,8 @@ class ProductsController extends Controller
                 return $array;
             });
             //创建一个选择图片的框
-            $form->image('image', '封面图片')->rules('required|image');
+            $form->text('photo', '封面图片')->rules('required')
+                    ->help('为了方便测试，此处只能传入网络图片');
             //创建一个富文本编辑器
             // 在写wangEditor模板（.blade.php)时，div的id不能是{{$id}},否则编辑器将无法显示，具体原因不详
             $form->wangEditor('description', '商品描述')->rules('required');
@@ -441,6 +442,16 @@ class ProductsController extends Controller
                 $form->text('price','单价')->rules('required|numeric|min:0.01');
                 $form->text('stock','剩余库存')->rules('required|integer|min:0');
             });
+        });
+
+        //定义事件回调，当模型即将保存时会触发个回调
+        $form->saving(function (Form $form){
+            $form->model()->price =collect($form->input('skus'))->where(Form::REMOVE_FLAG_NAME,0)->min('price') ? : 0;
+            //collect()是laravel提供的一个辅助函数，可以快速创建一个collection对象
+            //在这里将SKU数据放到collection对象中，利用collection提供的min()方法求出SKU中的最小price
+            //？：0 则是保证当SKU数据为空时，price字段被赋值0
+            //where(Form::REMOVE_FLAG_NAME, 0)，当我们在前端移除一个 SKU 的之后，点击保存按钮时 Laravel-Admin 仍然会将被删除的 SKU 提交上去，但是会添加一个 _remove_=1 的字段
+            //正常的 SKU 的 _remove_ 字段是 0，因此我们在查找最低价格时只需要查询 _remove_=0 的 SKU 即可
         });
 
         return $form;

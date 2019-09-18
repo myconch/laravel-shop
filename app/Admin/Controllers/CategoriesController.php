@@ -122,7 +122,7 @@ class CategoriesController extends Controller
      * @return Form
      */
     //$isEditing是再edit中传入的参数
-    protected function form($isEditing=false)
+    protected function form($isEditing = false)
     {
         $form = new Form(new Category);
 
