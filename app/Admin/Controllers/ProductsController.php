@@ -412,7 +412,7 @@ class ProductsController extends Controller
                 return $array;
             });
             //创建一个选择图片的框
-            $form->text('photo', '封面图片')->rules('required')
+            $form->text('image', '封面图片')->rules('required')
                     ->help('为了方便测试，此处只能传入网络图片');
             //创建一个富文本编辑器
             // 在写wangEditor模板（.blade.php)时，div的id不能是{{$id}},否则编辑器将无法显示，具体原因不详
