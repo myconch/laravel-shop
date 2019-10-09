@@ -10,7 +10,7 @@ class CartService
     public function get()
     {
         //直接用Auth::user()获取当前用户
-        return Auth::user()->cartItems()->with(['productSku.product'])->get();
+        return Auth::user()->cartItems()->with(['productSku.product.attributes'])->get();
     }
 
     public function add($skuId,$amount)

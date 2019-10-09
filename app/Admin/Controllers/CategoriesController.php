@@ -151,7 +151,7 @@ class CategoriesController extends Controller
                     $array[$category->id] = $category->full_name;
                 }
                 return $array;
-            })->rules('required');
+            });
         }
 
         return $form;

@@ -88,6 +88,15 @@ $api->version('v1',[
             // 提交订单
             $api->post('order','OrdersController@store')
                 ->name('api.order.store');
+            // 查看订单
+            $api->get('order','OrdersController@index')
+                ->name('api.order.index');
+            // 评价商品
+            $api->get('order/{order_id}/review','OrdersController@review')
+                ->name('api.order.review');
+            // 提交评价
+            $api->post('order/{order_id}/review','OrdersController@sendReview')
+                ->name('api.order.sendReview');
         });
     });
 

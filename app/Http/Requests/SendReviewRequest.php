@@ -21,8 +21,10 @@ class SendReviewRequest extends Request
                 'required',
                 //$this->route('order') 可以获得当前路由对应的订单对象
                 //Rule::exists() 判断用户提交的ID是否属于此订单
+                /*  因api中无法获取当前路由对应的订单对象，因此将此处验证移到OrdersController中
                 Rule::exists('order_items','id')
                     ->where('order_id',$this->route('order')->id)
+                */
             ],
             'reviews.*.rating' => ['required','integer','between:1,5'],
             'reviews.*.review' => ['required'],

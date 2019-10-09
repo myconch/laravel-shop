@@ -70,8 +70,8 @@ class OrdersController extends Controller
 
         //判断订单的发货状态是否未已发货
         if ($order->ship_status !== Order::SHIP_STATUS_DELIVERED) {
-            throw new InvalidRequestException('发货状态不正确');
-        }
+        throw new InvalidRequestException('发货状态不正确');
+    }
 
         //更新发货状态为已收到
         $order->update(['ship_status'=>Order::SHIP_STATUS_RECEIVED]);
@@ -109,6 +109,10 @@ class OrdersController extends Controller
             //遍历用户提交的数据
             foreach($reviews as $review) {
                 $orderItem = $order->items()->find($review['id']);
+                // 此处判断原本在SendReviewRequest中，但因为api中无法获取路由订单信息，因此将验证移到这里
+                if (!$orderItem) {
+                    throw new InvalidRequestException('输入orderItem的id错误！');
+                }
                 //保存评分和评价
                 $orderItem->update([
                     'rating' => $review['rating'],

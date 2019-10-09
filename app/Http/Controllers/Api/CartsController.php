@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\ProductSku;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\CartService;
@@ -28,5 +29,13 @@ class CartsController extends Controller
     {
         $this->CartService->add($request->sku_id,$request->amount);
         return 200;
+    }
+
+    public function remove(ProductSku $sku,Request $request)
+    {
+        //$request->user()->cartItems()->where('product_sku_id',$sku->id)->delete();
+        $this->cartService->remove($sku->id);
+
+        return [];
     }
 }
