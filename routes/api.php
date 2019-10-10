@@ -97,6 +97,12 @@ $api->version('v1',[
             // 提交评价
             $api->post('order/{order_id}/review','OrdersController@sendReview')
                 ->name('api.order.sendReview');
+            // 退款申请
+            $api->post('order/{order_id}/applyRefund','OrdersController@applyRefund')
+                ->name('api.order.applyRefund');
+            // 删除订单
+            $api->delete('order/{order_id}/destroy','OrdersController@destroy')
+                ->name('api.order.destroy');
         });
     });
 
