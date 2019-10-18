@@ -5,6 +5,7 @@ use App\Models\Category;
 use Auth;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Master;
 
 class ProductService
 {
@@ -63,6 +64,17 @@ class ProductService
         }
 
         $products = $builder->paginate(16);
+        // 判断是否有shopId
+        /*
+        if ($shopId = $request->shopId) {
+            $master = Master::where('id',$shopId)->first();
+            if ($master) {
+                foreach ($products as $product) {
+                    $product->price = $product->price * (1 + $master->percent);
+                }
+            }
+        }
+        */
 
         $response = [
             'products' => $products,

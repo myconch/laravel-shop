@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Auth;
 use App\Models\ProductSku;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -27,15 +28,15 @@ class CartsController extends Controller
     // 添加商品到购物车
     public function add (AddCartRequest $request)
     {
-        $this->CartService->add($request->sku_id,$request->amount);
+        $this->CartService->add($request->sku_id,$request->amount,$request->master_id);
         return 200;
     }
 
-    public function remove(ProductSku $sku,Request $request)
+    public function remove(Request $request)
     {
         //$request->user()->cartItems()->where('product_sku_id',$sku->id)->delete();
-        $this->cartService->remove($sku->id);
+        $Carts = $this->CartService->remove($request->skuIds);
 
-        return [];
+        return $Carts;
     }
 }

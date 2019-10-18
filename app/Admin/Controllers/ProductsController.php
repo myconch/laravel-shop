@@ -103,7 +103,7 @@ class ProductsController extends Controller
             $actions->disableDelete();
 
             // 自定义 规格 按钮
-            $actions->append(new Attribute($actions->getkey()));
+            //$actions->append(new Attribute($actions->getkey()));
         });
         $grid->tools(function ($tools){
             //禁用批量删除按钮
@@ -381,6 +381,7 @@ class ProductsController extends Controller
             $(\'#skuAttribute\').click(function () {
                 console.log("开始")
                 let select = document.getElementsByName("attribute");
+                console.log(select)
                 let attriVal = "";
                 for (var i=0; i< select.length; i++) {
                     console.log(select[i].value)

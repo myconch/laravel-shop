@@ -47,6 +47,15 @@ class User extends Authenticatable implements MustVerifyEmailContract, JWTSubjec
         return $this->hasMany(UserAddress::class);
     }
 
+    public function master() {
+        return $this->hasOne(Master::class);
+    }
+
+    public function userAndMasters ()
+    {
+        return $this->belongsToMany(Master::class,'user_and_master');
+    }
+
     public function favoriteProducts(){
 
         //belongsToMany()方法用于定义一个多对多的关联，第一个参数是关联模型的类名，第二个参数是中间表的表名

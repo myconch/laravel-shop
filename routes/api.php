@@ -56,6 +56,9 @@ $api->version('v1',[
             ->name('api.products.index');
         $api->get('products/{product}','ProductsController@show')
             ->name('api.products.show');
+        // 获取master信息
+        $api->get('master/{master_id}','UserController@master')
+            ->name('api.master');
 
         //需要token 验证
         $api->group([
@@ -85,6 +88,9 @@ $api->version('v1',[
             //新增购物车
             $api->post('cart','CartsController@add')
                 ->name('api.cart.add');
+            // 购物车中删除选中商品,并获取新的购车数据
+            $api->post('cartDelete','CartsController@remove')
+                ->name('api.cart.delete');
             // 提交订单
             $api->post('order','OrdersController@store')
                 ->name('api.order.store');
@@ -103,6 +109,24 @@ $api->version('v1',[
             // 删除订单
             $api->delete('order/{order_id}/destroy','OrdersController@destroy')
                 ->name('api.order.destroy');
+            // 收藏商品
+            $api->post('products/{product_id}/favorite','ProductsController@favor')
+                ->name('api.products.favor');
+            // 取消收藏
+            $api->delete('products/{product_id}/favorite','ProductsController@disfavor')
+                ->name('api.products.disfavor');
+            // 收藏列表
+            $api->get('products/favorites','ProductsController@favorites')
+                ->name('api.products.favorites');
+            // 创建master
+            $api->post('master','UserController@masterStore')
+                ->name('api.master.store');
+            // 修改master
+            $api->put('master','UserController@masterEdit')
+                ->name('api.master.edit');
+            // 查看商品携带用户信息
+            $api->get('products_user/{product}','ProductsController@show')
+                ->name('api.products.show1');
         });
     });
 
