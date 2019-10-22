@@ -28,7 +28,7 @@ class CartsController extends Controller
     // 添加商品到购物车
     public function add (AddCartRequest $request)
     {
-        $this->CartService->add($request->sku_id,$request->amount,$request->master_id);
+        $this->CartService->add($request->sku_id,$request->amount);
         return 200;
     }
 

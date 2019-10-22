@@ -10,10 +10,10 @@ class CartService
     public function get()
     {
         //直接用Auth::user()获取当前用户
-        return Auth::user()->cartItems()->with(['productSku.product.attributes','master'])->get();
+        return Auth::user()->cartItems()->with(['productSku.product.attributes'])->get();
     }
 
-    public function add($skuId,$amount,$masterId=null)
+    public function add($skuId,$amount)
     {
         $user = Auth::user();
         //数据库种查询该商品是否已经在购物车中
@@ -25,9 +25,7 @@ class CartService
             $item = new CartItem(['amount'=>$amount]);
             $item->user()->associate($user);
             $item->productSku()->associate($skuId);
-            if ($masterId) {
-                $item->master()->associate($masterId);
-            }
+
             $item->save();
         }
 

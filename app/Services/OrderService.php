@@ -18,6 +18,8 @@ class OrderService
 {
     public function store(User $user,UserAddress $address,$remark,$items,CouponCode $coupon = null)
     {
+        $user = $user->load(['userAndMasters']);
+        //dd($user->userAndMasters);
         //如果传入了优惠券，则先检测是否可用
         if ($coupon) {
             //但此时我们还没计算出订单总额，因此先不校验
@@ -43,18 +45,26 @@ class OrderService
             $order->save();
 
             $totalAmount = 0;
+            // 店主折扣，没有则为1
+            $percent = 1;
+            // 若$user->userAndMasters计数为空则表示不存在
+            if(count($user->userAndMasters)) {
+                $percent = 1 + $user->userAndMasters[0]->percent;
+            }
+
             //遍历用户提交的sku
             foreach($items as $data) {
                 $sku = ProductSku::find($data['sku_id']);
                 //创建一个OrderItem并直接与当前订单关联
                 $item = $order->items()->make([
                     'amount' => $data['amount'],
-                    'price' => $sku->price,
+                    'price' => $sku->price*$percent,
                 ]);
                 $item->product()->associate($sku->product_id);
                 $item->productSku()->associate($sku);
                 $item->save();
-                $totalAmount += $sku->price * $data['amount'];
+                // 计算总价时，算上店主折扣
+                $totalAmount += $sku->price * $data['amount'] *$percent;
                 if ($sku->decreaseStock($data['amount']) <= 0 ){
                     throw new InvalidRequestException('该商品库存不足');
                 }

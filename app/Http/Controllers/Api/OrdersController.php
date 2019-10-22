@@ -28,6 +28,7 @@ class OrdersController extends Controller
     public function store (OrderRequest $request)
     {
         $user = $request->user();
+        //dd($user->userAndMasters[0]->percent);
         $address = UserAddress::find($request->address_id);
         $coupon = null;
 
